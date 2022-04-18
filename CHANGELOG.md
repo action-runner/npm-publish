@@ -1,6 +1,17 @@
 
 
-## [1.5.7](https://github.com/action-runner/dependencies-outdater/compare/1.5.6...1.5.7) (2022-04-11)
+# 1.6.0 (2022-04-18)
+
+
+### Bug Fixes
+
+* update action ([088b509](https://github.com/action-runner/npm-publish/commit/088b5093b26f2d06ebfe7338f41f9d4e70aa2715))
+* update readme ([26cd739](https://github.com/action-runner/npm-publish/commit/26cd739eadb009b66fda18d3f0b083e8a169160b))
+
+
+### Features
+
+* add npm publish action ([b3ba999](https://github.com/action-runner/npm-publish/commit/b3ba99914eec0ef8da44842a527290ce494a95a4))## [1.5.7](https://github.com/action-runner/dependencies-outdater/compare/1.5.6...1.5.7) (2022-04-11)
 
 
 ### Bug Fixes
