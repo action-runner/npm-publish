@@ -1,6 +1,12 @@
 
 
-## [1.6.6](https://github.com/action-runner/npm-publish/compare/1.6.5...1.6.6) (2022-04-18)
+## [1.6.7](https://github.com/action-runner/npm-publish/compare/1.6.6...1.6.7) (2022-04-18)
+
+
+### Bug Fixes
+
+* issue ([#1](https://github.com/action-runner/npm-publish/issues/1)) ([17d4655](https://github.com/action-runner/npm-publish/commit/17d46557c1f9a6967e802c26d7600f074355a40e))
+* logger ([3328d2b](https://github.com/action-runner/npm-publish/commit/3328d2b69829f0d2bd421fcbbad268c0d489d671))## [1.6.6](https://github.com/action-runner/npm-publish/compare/1.6.5...1.6.6) (2022-04-18)
 
 
 ### Bug Fixes
