@@ -3,14 +3,19 @@ import { findWorkspacePackageJSONs } from "@action-runner/npm-utils";
 import { RegistrySwitcher } from "../registry/registry";
 import * as core from "@actions/core";
 import ezSpawn from "@jsdevtools/ez-spawn";
+import { Executor } from "../executor";
 
 /**
  * Publish multiple packages to multiple registries .
  */
 export class NpmPublisher {
-  private registrySwitcher = new RegistrySwitcher();
+  private registrySwitcher: RegistrySwitcher;
+  private executor: Executor;
 
-  constructor(private readonly publisherParam: PublisherParam) {}
+  constructor(private readonly publisherParam: PublisherParam) {
+    this.executor = new Executor(publisherParam.dryRun);
+    this.registrySwitcher = new RegistrySwitcher(publisherParam.dryRun);
+  }
 
   /**
    * Publish packages to multiple registries.
@@ -34,9 +39,14 @@ export class NpmPublisher {
       core.info(`Running command: npm publish ${packageFile}`);
       let output: ezSpawn.Process<string>;
       if (publishPath.length === 0) {
-        output = await ezSpawn.async("npm", "publish", "--access", "public");
+        output = await this.executor.execute(
+          "npm",
+          "publish",
+          "--access",
+          "public"
+        );
       } else {
-        output = await ezSpawn.async(
+        output = await this.executor.execute(
           "npm",
           "publish",
           "--access",

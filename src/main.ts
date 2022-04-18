@@ -8,6 +8,7 @@ import { NpmPublisher } from "./publish/npm_publisher";
     required: true,
   });
   const tokens = core.getMultilineInput("tokens", { required: true });
+  const dryRun = core.getBooleanInput("dryRun");
 
   if (registries.length !== tokens.length) {
     core.setFailed("registries and tokens must have the same length");
@@ -19,6 +20,7 @@ import { NpmPublisher } from "./publish/npm_publisher";
       token: tokens[index],
     })),
     packageFiles: packageFiles,
+    dryRun: dryRun,
   });
 
   await publisher.publish();
