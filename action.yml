@@ -1,4 +1,4 @@
-name: 'npm-publish'
+name: 'npm-multiple-publish'
 description: 'Publish multiple packages to multiple registries'
 branding:
   icon: align-center
