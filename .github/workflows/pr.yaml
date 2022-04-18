@@ -1,0 +1,58 @@
+name: Lint PR
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    name: Lint PR
+    steps:
+      - name: label
+        uses: action-runner/conventional-labeler@master
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build Outdater
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: index.js
+          path: dist/index.js
+
+  outdated:
+    needs: [build]
+    runs-on: ubuntu-latest
+    name: Check dependencies
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - uses: actions/download-artifact@v2
+        with:
+          name: index.js
+          path: ./dist
+      - name: check dependencies
+        uses: ./
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
