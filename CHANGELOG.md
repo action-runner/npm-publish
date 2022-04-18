@@ -1,6 +1,11 @@
 
 
-## [1.6.4](https://github.com/action-runner/npm-publish/compare/1.6.3...1.6.4) (2022-04-18)
+## [1.6.5](https://github.com/action-runner/npm-publish/compare/1.6.4...1.6.5) (2022-04-18)
+
+
+### Bug Fixes
+
+* login settings ([7d7126c](https://github.com/action-runner/npm-publish/commit/7d7126cc87654926995f70d9cb93ffa9efd0828a))## [1.6.4](https://github.com/action-runner/npm-publish/compare/1.6.3...1.6.4) (2022-04-18)
 
 
 ### Bug Fixes
