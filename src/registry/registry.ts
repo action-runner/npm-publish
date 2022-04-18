@@ -22,7 +22,14 @@ export class RegistrySwitcher {
         registry.registry.protocol.length
       );
       const content = `${url}/:_authToken`;
-      ezSpawn.async("npm", "set", content, registry.token);
+      await ezSpawn.async("npm", "set", content, registry.token);
+      await ezSpawn.async(
+        "npm",
+        "config",
+        "set",
+        "registry",
+        registry.registry.origin
+      );
     } catch (error) {
       core.setFailed(`Update npm config error: ${error}`);
       throw error;
