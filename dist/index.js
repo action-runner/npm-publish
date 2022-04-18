@@ -227,7 +227,8 @@ class RegistrySwitcher {
             try {
                 let url = registry.registry.origin.slice(registry.registry.protocol.length);
                 const content = `${url}/:_authToken`;
-                ez_spawn_1.default.async("npm", "set", content, registry.token);
+                yield ez_spawn_1.default.async("npm", "set", content, registry.token);
+                yield ez_spawn_1.default.async("npm", "config", "set", "registry", registry.registry.origin);
             }
             catch (error) {
                 core.setFailed(`Update npm config error: ${error}`);
