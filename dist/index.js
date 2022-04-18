@@ -125,23 +125,30 @@ class NpmPublisher {
         return __awaiter(this, void 0, void 0, function* () {
             let packageFiles = this.findPackageFiles();
             for (let registry of this.publisherParam.registries) {
+                core.startGroup(`Publishing to registry ${registry.registry}`);
                 yield this.registrySwitcher.switchTo(registry);
                 let promises = packageFiles.map((packageFile) => this.publishPackage(packageFile));
                 yield Promise.allSettled(promises);
+                core.endGroup();
             }
         });
     }
     publishPackage(packageFile) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const publishPath = packageFile.replace("package.json", "");
                 core.info(`Running command: npm publish ${packageFile}`);
-                let process = yield ez_spawn_1.default.async("npm", "publish", packageFile);
-                if (process.status !== 0) {
-                    core.setFailed(`Publish package error: ${process.stderr}`);
+                let output;
+                if (publishPath.length === 0) {
+                    output = yield ez_spawn_1.default.async("npm", "publish", "--access", "public");
                 }
+                else {
+                    output = yield ez_spawn_1.default.async("npm", "publish", "--access", "public", publishPath);
+                }
+                core.info(`${output.stdout}`);
             }
             catch (error) {
-                core.setFailed(`Publish package error: ${error}`);
+                core.error(`Publish package error: ${error}`);
             }
         });
     }
@@ -227,8 +234,9 @@ class RegistrySwitcher {
             try {
                 let url = registry.registry.origin.slice(registry.registry.protocol.length);
                 const content = `${url}/:_authToken`;
-                yield ez_spawn_1.default.async("npm", "set", content, registry.token);
+                core.info(`Setting up registry: ${registry.registry.origin}`);
                 yield ez_spawn_1.default.async("npm", "config", "set", "registry", registry.registry.origin);
+                yield ez_spawn_1.default.async("npm", "set", content, registry.token);
             }
             catch (error) {
                 core.setFailed(`Update npm config error: ${error}`);

@@ -8,6 +8,9 @@ jest.mock("@jsdevtools/ez-spawn");
 jest.mock("@actions/core", () => ({
   setFailed: jest.fn(),
   debug: jest.fn(),
+  info: jest.fn(),
+  startGroup: jest.fn(),
+  endGroup: jest.fn(),
 }));
 jest.mock("@action-runner/npm-utils");
 
@@ -15,7 +18,6 @@ describe("Given a registry switcher", () => {
   let publisher: NpmPublisher;
 
   test("When calling switch to", async () => {
-    (fs.readFileSync as jest.Mock).mockReturnValue("");
     (ezSpawn.async as jest.Mock).mockResolvedValue({
       stdout: ".npmrc",
       stderr: "",
@@ -37,7 +39,8 @@ describe("Given a registry switcher", () => {
     expect(ezSpawn.async).toHaveBeenCalledWith(
       "npm",
       "publish",
-      "package.json"
+      "--access",
+      "public"
     );
   });
 
@@ -69,19 +72,24 @@ describe("Given a registry switcher", () => {
     expect(ezSpawn.async).toHaveBeenCalledWith(
       "npm",
       "publish",
-      "package.json"
+      "--access",
+      "public"
     );
 
     expect(ezSpawn.async).toHaveBeenCalledWith(
       "npm",
       "publish",
-      "packages/a/package.json"
+      "--access",
+      "public",
+      "packages/a/"
     );
 
     expect(ezSpawn.async).toHaveBeenCalledWith(
       "npm",
       "publish",
-      "packages/b/package.json"
+      "--access",
+      "public",
+      "packages/b/"
     );
   });
 });

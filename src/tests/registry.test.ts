@@ -8,6 +8,7 @@ jest.mock("@jsdevtools/ez-spawn");
 jest.mock("@actions/core", () => ({
   setFailed: jest.fn(),
   debug: jest.fn(),
+  info: jest.fn(),
 }));
 
 describe("Given a registry switcher", () => {
