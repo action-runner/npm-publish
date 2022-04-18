@@ -207,7 +207,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RegistrySwitcher = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const fs_1 = __importDefault(__nccwpck_require__(7147));
 const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
 /**
  * Switch npm registry will switch the npm registry to the one specified in the
@@ -223,50 +222,16 @@ class RegistrySwitcher {
             yield this.updateNPMConfigFile(registry);
         });
     }
-    /**
-     * Get npmrc file path.
-     */
-    getNPMConfigFilePath() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                core.debug("Running command: npm config get userconfig");
-                let process = yield ez_spawn_1.default.async("npm", "config", "get", "userconfig");
-                return process.stdout.trim();
-            }
-            catch (error) {
-                core.setFailed(`${error}`);
-                return "";
-            }
-        });
-    }
-    /**
-     * Read npmrc file.
-     */
-    readNPMConfigFile() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let npmrcFilePath = yield this.getNPMConfigFilePath();
-                core.debug(`Reading npmrc file: ${npmrcFilePath}`);
-                let npmrcFile = fs_1.default.readFileSync(npmrcFilePath, "utf8");
-                return { npmrcFile, npmrcFilePath };
-            }
-            catch (error) {
-                core.setFailed(`Read npm config error: ${error}`);
-                return { npmrcFile: "", npmrcFilePath: "" };
-            }
-        });
-    }
     updateNPMConfigFile(registry) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let { npmrcFilePath } = yield this.readNPMConfigFile();
                 let url = registry.registry.origin.slice(registry.registry.protocol.length);
-                const content = `${url}/:_authToken=${registry.token}`;
-                core.debug(`Writing registry to npmrc file: ${npmrcFilePath}`);
-                fs_1.default.writeFileSync(npmrcFilePath, content);
+                const content = `${url}/:_authToken`;
+                ez_spawn_1.default.async("npm", "set", content, registry.token);
             }
             catch (error) {
                 core.setFailed(`Update npm config error: ${error}`);
+                throw error;
             }
         });
     }

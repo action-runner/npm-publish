@@ -18,7 +18,6 @@ describe("Given a registry switcher", () => {
   });
 
   test("When calling switch to", async () => {
-    (fs.readFileSync as jest.Mock).mockReturnValue("");
     (ezSpawn.async as jest.Mock).mockResolvedValue({
       stdout: ".npmrc",
       stderr: "",
@@ -29,10 +28,11 @@ describe("Given a registry switcher", () => {
       token: "mock-token",
     });
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(".npmrc", "utf8");
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      ".npmrc",
-      "//registry.npmjs.org/:_authToken=mock-token"
+    expect(ezSpawn.async).toHaveBeenCalledWith(
+      "npm",
+      "set",
+      "//registry.npmjs.org/:_authToken",
+      "mock-token"
     );
   });
 });
