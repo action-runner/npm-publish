@@ -18,23 +18,35 @@ export class NpmPublisher {
   async publish() {
     let packageFiles = this.findPackageFiles();
     for (let registry of this.publisherParam.registries) {
+      core.startGroup(`Publishing to registry ${registry.registry}`);
       await this.registrySwitcher.switchTo(registry);
       let promises = packageFiles.map((packageFile) =>
         this.publishPackage(packageFile)
       );
       await Promise.allSettled(promises);
+      core.endGroup();
     }
   }
 
   private async publishPackage(packageFile: string) {
     try {
+      const publishPath = packageFile.replace("package.json", "");
       core.info(`Running command: npm publish ${packageFile}`);
-      let process = await ezSpawn.async("npm", "publish", packageFile);
-      if (process.status !== 0) {
-        core.setFailed(`Publish package error: ${process.stderr}`);
+      let output: ezSpawn.Process<string>;
+      if (publishPath.length === 0) {
+        output = await ezSpawn.async("npm", "publish", "--access", "public");
+      } else {
+        output = await ezSpawn.async(
+          "npm",
+          "publish",
+          "--access",
+          "public",
+          publishPath
+        );
       }
+      core.info(`${output.stdout}`);
     } catch (error) {
-      core.setFailed(`Publish package error: ${error}`);
+      core.error(`Publish package error: ${error}`);
     }
   }
 

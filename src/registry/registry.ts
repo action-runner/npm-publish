@@ -1,6 +1,5 @@
 import { RegistryParam } from "../types";
 import * as core from "@actions/core";
-import fs from "fs";
 import ezSpawn from "@jsdevtools/ez-spawn";
 
 /**
@@ -22,7 +21,7 @@ export class RegistrySwitcher {
         registry.registry.protocol.length
       );
       const content = `${url}/:_authToken`;
-      await ezSpawn.async("npm", "set", content, registry.token);
+      core.info(`Setting up registry: ${registry.registry.origin}`);
       await ezSpawn.async(
         "npm",
         "config",
@@ -30,6 +29,7 @@ export class RegistrySwitcher {
         "registry",
         registry.registry.origin
       );
+      await ezSpawn.async("npm", "set", content, registry.token);
     } catch (error) {
       core.setFailed(`Update npm config error: ${error}`);
       throw error;
