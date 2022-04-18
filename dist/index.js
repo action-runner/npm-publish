@@ -49,6 +49,29 @@ const npm_publisher_1 = __nccwpck_require__(4902);
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -65,7 +88,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NpmPublisher = void 0;
 const npm_utils_1 = __nccwpck_require__(9540);
 const registry_1 = __nccwpck_require__(5081);
-const core_1 = __importDefault(__nccwpck_require__(2186));
+const core = __importStar(__nccwpck_require__(2186));
 const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
 /**
  * Publish multiple packages to multiple registries .
@@ -91,14 +114,14 @@ class NpmPublisher {
     publishPackage(packageFile) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                core_1.default.debug(`Running command: npm publish ${packageFile}`);
+                core.debug(`Running command: npm publish ${packageFile}`);
                 let process = yield ez_spawn_1.default.async("npm", "publish", packageFile);
                 if (process.status !== 0) {
-                    core_1.default.setFailed(`Publish package error: ${process.stderr}`);
+                    core.setFailed(`Publish package error: ${process.stderr}`);
                 }
             }
             catch (error) {
-                core_1.default.setFailed(`Publish package error: ${error}`);
+                core.setFailed(`Publish package error: ${error}`);
             }
         });
     }
@@ -126,6 +149,29 @@ exports.NpmPublisher = NpmPublisher;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -140,7 +186,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RegistrySwitcher = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
+const core = __importStar(__nccwpck_require__(2186));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
 /**
@@ -163,12 +209,12 @@ class RegistrySwitcher {
     getNPMConfigFilePath() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                core_1.default.debug("Running command: npm config get userconfig");
+                core.debug("Running command: npm config get userconfig");
                 let process = yield ez_spawn_1.default.async("npm", "config", "get", "userconfig");
                 return process.stdout.trim();
             }
             catch (error) {
-                core_1.default.setFailed(`${error}`);
+                core.setFailed(`${error}`);
                 return "";
             }
         });
@@ -180,12 +226,12 @@ class RegistrySwitcher {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let npmrcFilePath = yield this.getNPMConfigFilePath();
-                core_1.default.debug(`Reading npmrc file: ${npmrcFilePath}`);
+                core.debug(`Reading npmrc file: ${npmrcFilePath}`);
                 let npmrcFile = fs_1.default.readFileSync(npmrcFilePath, "utf8");
                 return { npmrcFile, npmrcFilePath };
             }
             catch (error) {
-                core_1.default.setFailed(`Read npm config error: ${error}`);
+                core.setFailed(`Read npm config error: ${error}`);
                 return { npmrcFile: "", npmrcFilePath: "" };
             }
         });
@@ -196,11 +242,11 @@ class RegistrySwitcher {
                 let { npmrcFilePath } = yield this.readNPMConfigFile();
                 let url = registry.registry.origin.slice(registry.registry.protocol.length);
                 const content = `${url}/:_authToken=${registry.token}`;
-                core_1.default.debug(`Writing registry to npmrc file: ${npmrcFilePath}`);
+                core.debug(`Writing registry to npmrc file: ${npmrcFilePath}`);
                 fs_1.default.writeFileSync(npmrcFilePath, content);
             }
             catch (error) {
-                core_1.default.setFailed(`Update npm config error: ${error}`);
+                core.setFailed(`Update npm config error: ${error}`);
             }
         });
     }
