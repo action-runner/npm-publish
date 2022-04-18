@@ -134,7 +134,7 @@ class NpmPublisher {
     publishPackage(packageFile) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                core.debug(`Running command: npm publish ${packageFile}`);
+                core.info(`Running command: npm publish ${packageFile}`);
                 let process = yield ez_spawn_1.default.async("npm", "publish", packageFile);
                 if (process.status !== 0) {
                     core.setFailed(`Publish package error: ${process.stderr}`);

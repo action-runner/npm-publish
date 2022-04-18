@@ -28,7 +28,7 @@ export class NpmPublisher {
 
   private async publishPackage(packageFile: string) {
     try {
-      core.debug(`Running command: npm publish ${packageFile}`);
+      core.info(`Running command: npm publish ${packageFile}`);
       let process = await ezSpawn.async("npm", "publish", packageFile);
       if (process.status !== 0) {
         core.setFailed(`Publish package error: ${process.stderr}`);
