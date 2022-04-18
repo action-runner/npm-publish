@@ -1,5 +1,5 @@
 import { RegistryParam } from "../types";
-import core from "@actions/core";
+import * as core from "@actions/core";
 import fs from "fs";
 import ezSpawn from "@jsdevtools/ez-spawn";
 

@@ -1,7 +1,7 @@
 import { PublisherParam } from "../types";
 import { findWorkspacePackageJSONs } from "@action-runner/npm-utils";
 import { RegistrySwitcher } from "../registry/registry";
-import core from "@actions/core";
+import * as core from "@actions/core";
 import ezSpawn from "@jsdevtools/ez-spawn";
 
 /**
