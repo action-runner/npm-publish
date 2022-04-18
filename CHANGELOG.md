@@ -1,6 +1,11 @@
 
 
-## [1.6.3](https://github.com/action-runner/npm-publish/compare/1.6.2...1.6.3) (2022-04-18)
+## [1.6.4](https://github.com/action-runner/npm-publish/compare/1.6.3...1.6.4) (2022-04-18)
+
+
+### Bug Fixes
+
+* import ([eb008ee](https://github.com/action-runner/npm-publish/commit/eb008ee7ecec741519fafdc9d3b8862c19a16dd0))## [1.6.3](https://github.com/action-runner/npm-publish/compare/1.6.2...1.6.3) (2022-04-18)
 
 
 ### Bug Fixes
