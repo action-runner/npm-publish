@@ -29,9 +29,8 @@
     "test": "jest",
     "coverage": "jest --coverage",
     "dev": "ts-node src/main.ts",
-    "start": "node dist/index.js",
     "prebuild": "tsc",
-    "build": "ncc build -s --external='@npmcli/run-script' ./build/index.js -o dist",
+    "build": "ncc build ./build/main.js -o dist",
     "release": "release-it --no-git.requireCleanWorkingDir"
   }
 }

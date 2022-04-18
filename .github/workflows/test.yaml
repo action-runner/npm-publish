@@ -30,7 +30,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
-    if: ${{ (github.event.pusher.name != 'github action') && (github.ref == 'refs/heads/master') }}
+    if: ${{ (github.event.pusher.name != 'github action') && (github.ref == 'refs/heads/main') }}
     needs: [ test ]
     runs-on: ubuntu-latest
     steps:
