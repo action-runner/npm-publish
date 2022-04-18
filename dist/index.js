@@ -213,8 +213,8 @@ const executor_1 = __nccwpck_require__(4251);
 class NpmPublisher {
     constructor(publisherParam) {
         this.publisherParam = publisherParam;
-        this.registrySwitcher = new registry_1.RegistrySwitcher();
         this.executor = new executor_1.Executor(publisherParam.dryRun);
+        this.registrySwitcher = new registry_1.RegistrySwitcher(publisherParam.dryRun);
     }
     /**
      * Publish packages to multiple registries.
@@ -306,18 +306,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RegistrySwitcher = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
+const executor_1 = __nccwpck_require__(4251);
 /**
  * Switch npm registry will switch the npm registry to the one specified in the
  * parameter. and will write the registry to the .npmrc file.
  */
 class RegistrySwitcher {
+    constructor(dryRun) {
+        this.dryRun = dryRun;
+        this.executor = new executor_1.Executor(dryRun);
+    }
     /**
      * Switch npm registry to the one specified in the parameter.
      * @param registry NPM Registry login information
@@ -333,8 +334,8 @@ class RegistrySwitcher {
                 let url = registry.registry.origin.slice(registry.registry.protocol.length);
                 const content = `${url}/:_authToken`;
                 core.info(`Setting up registry: ${registry.registry.origin}`);
-                yield ez_spawn_1.default.async("npm", "config", "set", "registry", registry.registry.origin);
-                yield ez_spawn_1.default.async("npm", "set", content, registry.token);
+                yield this.executor.execute("npm", "config", "set", "registry", registry.registry.origin);
+                yield this.executor.execute("npm", "set", content, registry.token);
             }
             catch (error) {
                 core.setFailed(`Update npm config error: ${error}`);

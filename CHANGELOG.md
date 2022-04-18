@@ -1,6 +1,11 @@
 
 
-## [1.6.7](https://github.com/action-runner/npm-publish/compare/1.6.6...1.6.7) (2022-04-18)
+# [1.7.0](https://github.com/action-runner/npm-publish/compare/1.6.7...1.7.0) (2022-04-18)
+
+
+### Features
+
+* add dry run ([#2](https://github.com/action-runner/npm-publish/issues/2)) ([37e51b1](https://github.com/action-runner/npm-publish/commit/37e51b10e14cf654897be0545da8e6bf69bb3853))## [1.6.7](https://github.com/action-runner/npm-publish/compare/1.6.6...1.6.7) (2022-04-18)
 
 
 ### Bug Fixes
