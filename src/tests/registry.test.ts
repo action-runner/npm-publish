@@ -1,7 +1,5 @@
-import { RegistrySwitcher } from "../registry/registry";
 import ezSpawn from "@jsdevtools/ez-spawn";
-import fs from "fs";
-import core from "@actions/core";
+import { RegistrySwitcher } from "../registry/registry";
 
 jest.mock("fs");
 jest.mock("@jsdevtools/ez-spawn");
@@ -15,7 +13,7 @@ describe("Given a registry switcher", () => {
   let switcher: RegistrySwitcher;
 
   beforeEach(() => {
-    switcher = new RegistrySwitcher();
+    switcher = new RegistrySwitcher(false);
   });
 
   test("When calling switch to", async () => {

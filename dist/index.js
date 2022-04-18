@@ -1,6 +1,104 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3881:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Executor = void 0;
+const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
+const core = __importStar(__nccwpck_require__(2186));
+class Executor {
+    constructor(dryRun) {
+        this.dryRun = dryRun;
+    }
+    execute(command, ...args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.dryRun) {
+                core.info(`Dry run: ${command} ${args.join(" ")}`);
+                const mockResult = {
+                    command: "",
+                    args: [],
+                    pid: 0,
+                    stdout: "",
+                    stderr: "",
+                    output: ["", "", ""],
+                    status: 0,
+                    signal: null,
+                };
+                return mockResult;
+            }
+            return yield ez_spawn_1.default.async(command, ...args);
+        });
+    }
+}
+exports.Executor = Executor;
+
+
+/***/ }),
+
+/***/ 4251:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(3881), exports);
+
+
+/***/ }),
+
 /***/ 9538:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -48,6 +146,7 @@ const npm_publisher_1 = __nccwpck_require__(4902);
         required: true,
     });
     const tokens = core.getMultilineInput("tokens", { required: true });
+    const dryRun = core.getBooleanInput("dryRun");
     if (registries.length !== tokens.length) {
         core.setFailed("registries and tokens must have the same length");
     }
@@ -57,6 +156,7 @@ const npm_publisher_1 = __nccwpck_require__(4902);
             token: tokens[index],
         })),
         packageFiles: packageFiles,
+        dryRun: dryRun,
     });
     yield publisher.publish();
 }))();
@@ -101,15 +201,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NpmPublisher = void 0;
 const npm_utils_1 = __nccwpck_require__(9540);
 const registry_1 = __nccwpck_require__(5081);
 const core = __importStar(__nccwpck_require__(2186));
-const ez_spawn_1 = __importDefault(__nccwpck_require__(7020));
+const executor_1 = __nccwpck_require__(4251);
 /**
  * Publish multiple packages to multiple registries .
  */
@@ -117,6 +214,7 @@ class NpmPublisher {
     constructor(publisherParam) {
         this.publisherParam = publisherParam;
         this.registrySwitcher = new registry_1.RegistrySwitcher();
+        this.executor = new executor_1.Executor(publisherParam.dryRun);
     }
     /**
      * Publish packages to multiple registries.
@@ -140,10 +238,10 @@ class NpmPublisher {
                 core.info(`Running command: npm publish ${packageFile}`);
                 let output;
                 if (publishPath.length === 0) {
-                    output = yield ez_spawn_1.default.async("npm", "publish", "--access", "public");
+                    output = yield this.executor.execute("npm", "publish", "--access", "public");
                 }
                 else {
-                    output = yield ez_spawn_1.default.async("npm", "publish", "--access", "public", publishPath);
+                    output = yield this.executor.execute("npm", "publish", "--access", "public", publishPath);
                 }
                 core.info(`${output.stdout}`);
             }

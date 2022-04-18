@@ -17,6 +17,10 @@ jest.mock("@action-runner/npm-utils");
 describe("Given a registry switcher", () => {
   let publisher: NpmPublisher;
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test("When calling switch to", async () => {
     (ezSpawn.async as jest.Mock).mockResolvedValue({
       stdout: ".npmrc",
@@ -33,6 +37,7 @@ describe("Given a registry switcher", () => {
         },
       ],
       packageFiles: ["package.json"],
+      dryRun: false,
     });
 
     await publisher.publish();
@@ -65,6 +70,7 @@ describe("Given a registry switcher", () => {
         },
       ],
       packageFiles: ["package.json"],
+      dryRun: false,
     });
 
     await publisher.publish();
@@ -91,5 +97,34 @@ describe("Given a registry switcher", () => {
       "public",
       "packages/b/"
     );
+  });
+
+  test("When calling switch to", async () => {
+    (fs.readFileSync as jest.Mock).mockReturnValue("");
+    (ezSpawn.async as jest.Mock).mockResolvedValue({
+      stdout: ".npmrc",
+      stderr: "",
+    });
+
+    (findWorkspacePackageJSONs as jest.Mock).mockReturnValue([
+      "package.json",
+      "packages/a/package.json",
+      "packages/b/package.json",
+    ]);
+
+    publisher = new NpmPublisher({
+      registries: [
+        {
+          registry: new URL("https://registry.npmjs.org/"),
+          token: "mock-token",
+        },
+      ],
+      packageFiles: ["package.json"],
+      dryRun: true,
+    });
+
+    await publisher.publish();
+
+    expect(ezSpawn.async).toHaveBeenCalledTimes(0);
   });
 });
